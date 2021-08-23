@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baizhi.dao.UserDao">
+    <sql id="all">
+        select id,username,phone,headimg,brief,wechat,createdate,status from yx_user
+    </sql>
+
+    <!--List<User> queryRange(@Param("start") int start,@Param("end") int end);-->
+<select id="queryRange" resultType="User" >
+<include refid="all"/>limit #{start} ,#{end}
+</select>
+    <!--Integer content();-->
+<select id="content" resultType="Integer">
+    select count(*) from yx_user
+</select>
+    <!--void update(@Param("status") int status,@Param("id")  String id);-->
+
+    <update id="update" >
+    update yx_user set status=#{status} where id=#{id}
+</update>
+    <!--void sava(User user);-->
+<insert id="sava" parameterType="User">
+    insert into  yx_user values (#{id},#{username},#{phone},#{headimg},#{brief},#{wechat},#{createdate},#{status},#{sex})
+</insert>
+    <!--User queryOne(String id);-->
+    <select id="queryOne" parameterType="String" resultType="User">
+        select  id,username,phone,headimg,brief,wechat,createdate,status from yx_user where id=#{id}
+    </select>
+    <!--void delete(String id);-->
+    <delete id="delete" parameterType="String">
+        delete  from yx_user where  id=#{id}
+    </delete>
+    <!--List<User> queryAll();-->
+<select id="queryAll" resultType="User">
+ <include refid="all"/>
+</select>
+    <!--List<MonthAndCount> selectBySex(String sex);-->
+<select id="selectBySex" resultType="cn.baizhi.vo.MonthAndCount" parameterType="String">
+   select  month(createdate) month ,count(*) sexCount from yx_user where sex=#{sex}
+group by month((createdate));
+</select>
+
+</mapper>
